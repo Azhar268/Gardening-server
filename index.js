@@ -27,14 +27,14 @@ async function run() {
   res.send(allProfiles);
 });
 
-    // Get profile by uid
+   
     app.get('/profiles/uid/:uid', async (req, res) => {
       const { uid } = req.params;
       const profile = await profilesCollection.findOne({ uid });
-      res.send(profile || {}); // send empty object if not exists
+      res.send(profile || {}); 
     });
 
-   // Get all tips (or limit to 6 for trending)
+
 app.get("/gardenTips", async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 0;
@@ -42,7 +42,7 @@ app.get("/gardenTips", async (req, res) => {
       .db("ProfileDB")
       .collection("gardenTips")
       .find()
-      .sort({ createdAt: -1 }) // newest first
+      .sort({ createdAt: -1 }) 
       .limit(limit)
       .toArray();
 
@@ -52,7 +52,7 @@ app.get("/gardenTips", async (req, res) => {
   }
 });
 
-// Get single tip by id
+
 app.get("/gardenTips/:id", async (req, res) => {
   try {
     const id = req.params.id;
@@ -67,7 +67,7 @@ app.get("/gardenTips/:id", async (req, res) => {
   }
 });
 
-// Post (already working but add createdAt for sorting)
+
 app.post("/gardenTips", async (req, res) => {
   try {
     const tip = req.body;
@@ -84,11 +84,11 @@ app.post("/gardenTips", async (req, res) => {
   }
 });
 
-// Like a tip (increment totalLiked by 1)
+
 app.patch("/gardenTips/:id/like", async (req, res) => {
   try {
     const { id } = req.params;
-    const { action } = req.body; // "like" or "unlike"
+    const { action } = req.body; 
     const increment = action === "unlike" ? -1 : 1;
 
     const result = await client
@@ -107,7 +107,7 @@ app.patch("/gardenTips/:id/like", async (req, res) => {
 
 
 
-    // Create or update profile by uid
+    
     app.put('/profiles/uid/:uid', async (req, res) => {
       const { uid } = req.params;
       const profileData = req.body;
@@ -115,7 +115,7 @@ app.patch("/gardenTips/:id/like", async (req, res) => {
       const result = await profilesCollection.updateOne(
         { uid },
         { $set: profileData },
-        { upsert: true } // create if doesn't exist
+        { upsert: true } 
       );
 
       res.json({
@@ -188,13 +188,13 @@ app.delete("/gardenTips/:id", async (req, res) => {
 
 
 
-    console.log("✅ MongoDB connected and API ready!");
+    console.log("MongoDB connected and API ready!");
   } finally {
-    // keep connection open
+    
   }
 }
 run().catch(console.dir);
 
-app.get('/', (req, res) => res.send('Profile server is running 🌱'));
+app.get('/', (req, res) => res.send('Profile server is running'));
 
-app.listen(port, () => console.log(`🚀 Server running on port ${port}`));
+app.listen(port, () => console.log(`Server running on port ${port}`));
